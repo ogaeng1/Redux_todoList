@@ -1,15 +1,16 @@
 import React from "react";
 import styled from "styled-components";
-import { todoDeleteButton, isDoneChange } from "../redux/configStore";
+import { deleteTodoButton, isDoneChange } from "../redux-toolkit/configStore";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 const List = () => {
-    const todos = useSelector((state) => {return state.todos.todo});
+    // useSelector : store 에 있던 state 를 가져오는 함수라고 생각하면 되나..?
+    const list = useSelector((state) => state.todos.todos);
     const dispathch = useDispatch();
 
     const onDeleteButton = (id) => {
-        dispathch(todoDeleteButton(id));
+        dispathch(deleteTodoButton(id));
     };
 
     const onIsDoneChange = (id) => {
@@ -20,42 +21,59 @@ const List = () => {
         <ListContainer>
             <ListTitle>진행중..🔥</ListTitle>
             <ListWrap>
-                {todos.map((todo) => {
+                {list.map((todo) => {
                     if (!todo.isDone) {
                         return (
-                            <div key={todo.id}>
-                                <Link to={`/detail/${todo.id}`} key={todo.id}}>
-                                    <div>상세보기</div>
+                            <DetailContainer key={todo.id}>
+                                <Link to ={`/detail/${todo.id}`}>
+                                    상세보기
                                 </Link>
-                                <div>
-                                    <h2>{todo.title}</h2>
+                                <>  { /* Fragments 문법. 키나 속성은 사용 불가능  */ }
+                                    <h3>{todo.title}</h3>
                                     <div>{todo.content}</div>
-                                </div>
-                                <div>
-                                    <button></button>
-                                    <button></button>
-                                </div>
-                            </div>
-                        ) 
+                                </>
+                                <Buttons>
+                                    <DeleteButton onClick={() => onDeleteButton(todo.id)}>삭제하기</DeleteButton>
+                                    <DoneButton onClick={() => onIsDoneChange(todo.id)}>
+                                        {todo.isDone ? "취소" : "완료"}
+                                    </DoneButton>
+                                </Buttons>
+                            </DetailContainer>
+                        );
                     }
-                })}
+                    else return null;
+                })}           
             </ListWrap>
             <ListTitle>완료..✔️</ListTitle>
             <ListWrap>
-                {todos.map((todo) => {
+            {list.map((todo) => {
                     if (todo.isDone) {
-                        return (<Todo todo={todo} key={todo.id} setTodos={setTodos} onDelete={onDelete} doneCancelBtn={doneCancelBtn} />);
+                        return (
+                            <DetailContainer key={todo.id}>
+                                <Link to ={`/detail/${todo.id}`}>
+                                    상세보기
+                                </Link>
+                                <>
+                                    <h2>{todo.title}</h2>
+                                    <div>{todo.content}</div>
+                                </>
+                                <Buttons>
+                                    <DeleteButton onClick={() => onDeleteButton(todo.id)}>삭제하기</DeleteButton>
+                                    <DoneButton onClick={() => onIsDoneChange(todo.id)}>
+                                        {todo.isDone ? "취소" : "완료"}
+                                    </DoneButton>
+                                </Buttons>
+                            </DetailContainer>
+                        );
                     }
-                    else {
-                        return null;
-                    }
+                    else return null;
                 })}
             </ListWrap>
         </ListContainer>
     )
 }
 
-export default List
+export default List;
 
 const ListContainer = styled.div`
     width: 100%;
@@ -67,9 +85,41 @@ const ListTitle = styled.h2`
 `;
 
 const ListWrap = styled.div`
-    margin: 20px;
-    width: 100%;
-    height: 300px;
     display: flex;
-    flex-wrap: wrap;
+`;
+
+const DetailContainer = styled.div`
+    width: 300px;
+    height: 170px;
+    border: 4px solid teal;
+    border-radius: 10px;
+    margin: 10px;
+    padding: 15px;
+`;
+
+const Buttons = styled.div`
+    display: flex;
+    margin-top: 30px;
+    width: 100%;
+    gap: 10px;
+`;
+
+const DeleteButton = styled.button`
+    background-color: #fff;
+    color: black;
+    cursor: pointer;
+    width: 50%;
+    border-radius: 8px;
+    height: 40px;
+    border: 2px solid red;
+`;
+
+const DoneButton = styled.button`
+    background-color: #fff;
+    color: black;
+    cursor: pointer;
+    width: 50%;
+    border-radius: 8px;
+    height: 40px;
+    border: 2px solid green;
 `;

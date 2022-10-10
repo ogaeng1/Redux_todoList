@@ -1,12 +1,16 @@
 import React from "react";
-import "./style.css"
 import styled from "styled-components";
+import Header from "./Header";
+import Form from "./Form";
+import List from "./List";
 
-function Layout(props) {
+function Layout() {
 
     return(
-        <LayoutContainer className="container">
-            {props.children}
+        <LayoutContainer>
+            <Header />
+            <Form />
+            <List />
         </LayoutContainer>
     )
 }
