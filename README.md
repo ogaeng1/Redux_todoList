@@ -1,4 +1,4 @@
-# ReduxToolkit-todoList 을 활용한 투두리스트
+# ReduxToolkit 을 활용한 투두리스트
 
 # 컴포넌트 구성
 Header , Layout , Form , List
